@@ -2,6 +2,8 @@ const User = require("../models/User");
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
+
+
 // handle errors with mongoose
 const handleErrors = (err) => {
   // console.log(err.message)
@@ -33,16 +35,10 @@ const handleErrors = (err) => {
 // Create json token
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge })
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
 }
 
-const signUp_get = (req, res) => {
-  res.render('signup');
-}
 
-const login_get = (req, res) => {
-  res.render('login')
-}
 
 
 // Sign up post
@@ -68,7 +64,6 @@ const signUp_post = async (req, res) => {
 
 // Login post
 
-
 const login_post = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -92,11 +87,5 @@ const logout_get = async (req, res) => {
 }
 
 
-module.exports = {
-  signUp_get,
-  signUp_post,
-  login_get,
-  login_post,
-  logout_get
-}
+module.exports = {  signUp_post, login_post, logout_get }
 

@@ -1,8 +1,8 @@
 const cookieParser = require('cookie-parser');
 const express = require('express')
 const mongoose = require('mongoose');
-const { requireAuth } = require('./middlewares/authMiddleware');
 const router = require('./routes/authRoutes');
+const { checkUser } = require('./middlewares/authMiddleware');
 
 
 const app = express();
@@ -16,6 +16,7 @@ app.use(cookieParser())
 // view engine
 app.set('view engine', 'ejs');
 
+
 // databasee connection
 
 const dbURI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.oxxl7li.mongodb.net`
@@ -28,9 +29,8 @@ mongoose.connect(dbURI, { dbName: 'jwt-auth' })
 // app.listen(3000, ()=>console.log('Connected Locally')) // use for offline , will remove later
 
 
-// routes
-app.get('/', (req, res) => res.render('home'));
-app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
+// api routes
+app.get('*', checkUser) // check every get routes if the user is exists or not
 app.use(router);
 
 
