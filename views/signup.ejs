@@ -7,16 +7,24 @@
     <div>
       <label for="email">Email</label>
       <input type="text" placeholder="Enter email" name="email" id="email" required>
+      <div class="email error"></div>
     </div>
     <div>
       <label for="password">Password</label>
       <input type="password" placeholder="Enter password" name="password" id="password" required>
+      <div class="password error"></div>
     </div>
     <button>SignUp</button>
   </form>
 
   <script>
     const form = document.querySelector('form');
+    const emailError = document.querySelector('.email.error')
+    const passwordError = document.querySelector('.password.error')
+    const emailInput = document.querySelector('#email')
+    const passwordInput = document.querySelector('#password')
+
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -25,12 +33,27 @@
       // console.log(email, password)
 
       try {
-          const res = await fetch('/signup', {
-            method: 'POST',
-            body: JSON.stringify({email, password}),
-            headers: {'content-type': 'application/json'}
-          })
-          console.log(res)
+        const res = await fetch('/signup', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+          headers: { 'content-type': 'application/json' }
+        })
+        const data = await res.json();
+        console.log(data)
+        // redirect user after successful signup
+        if(data.user){
+          location.assign('/')
+        }
+
+        // show errors if any
+        if (data.errors) {
+          emailError.textContent = data.errors.email
+          passwordError.textContent = data.errors.password
+        }
+        // errors in border color
+        emailInput.style.borderColor = data.errors.email ? 'red' : ''
+        passwordInput.style.borderColor = data.errors.password ? 'red' : ''
+
       } catch (err) {
         console.log(err)
       }

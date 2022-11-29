@@ -44,7 +44,7 @@ signUp_post = async (req, res) => {
   } catch (err) {
     // res.json({ status: 'error', message: 'User not created.' })
     const errors = handleErrors(err)
-    res.status(400).json(errors)
+    res.status(400).json({errors})
 
   }
 }
