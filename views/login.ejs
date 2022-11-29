@@ -3,29 +3,72 @@
 </head>
 <%- include('partials/header') -%>
 
-<h2 class="page-title">Login</h2>
-<form>
-  <div>
-    <label for="email">Email</label>
-    <input type="text" placeholder="Enter email" name="email" id="email" required>
-  </div>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" placeholder="Enter password" name="password" id="password" required>
-  </div>
-  <button>Login</button>
-</form>
+  <h2 class="page-title">Login</h2>
+  <form>
+    <div>
+      <label for="email">Email</label>
+      <input type="text" placeholder="Enter email" name="email" id="email" required>
+      <div class="email error"></div>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" placeholder="Enter password" name="password" id="password" required>
+      <div class="password error"></div>
+    </div>
+    <button>Login</button>
+  </form>
 
-<script>
-  const form = document.querySelector('form');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+  <script>
+    const form = document.querySelector('form');
+    const emailError = document.querySelector('.email.error')
+    const passwordError = document.querySelector('.password.error')
+    const emailInput = document.querySelector('#email')
+    const passwordInput = document.querySelector('#password')
 
-    const email = form.email.value;
-    const password = form.password.value;
-    console.log(email, password)
-  })
-</script>
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      emailError.textContent = ""
+      passwordError.textContent = ""
+
+      const email = form.email.value;
+      const password = form.password.value;
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+          headers: { 'content-type': 'application/json' }
+        })
+        const data = await res.json();
+        console.log(data)
+        // redirect user after successful signup
+        if (data.user) {
+          location.assign('/')
+        }
+
+        // show errors if any
+        if (data.errors) {
+          emailError.textContent = data.errors.email
+          passwordError.textContent = data.errors.password
+        }
+        // errors in border color
+        emailInput.style.boxShadow = data.errors.email ? 'red 2px 2px 6px -3px' : ''
+        passwordInput.style.boxShadow = data.errors.password ? 'red 2px 2px 6px -3px' : ''
+
+        // auto focus input box
+        if (data.errors.email) {
+          emailInput.focus();
+        } else if (data.errors.password) {
+          passwordInput.focus();
+        }
+
+      } catch (err) {
+        console.log(err)
+      }
+    })
+  </script>
 
 
   <%- include('partials/footer') -%>

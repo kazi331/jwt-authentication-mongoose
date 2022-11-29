@@ -41,7 +41,7 @@
         const data = await res.json();
         console.log(data)
         // redirect user after successful signup
-        if(data.user){
+        if (data.user) {
           location.assign('/')
         }
 
@@ -53,6 +53,13 @@
         // errors in border color
         emailInput.style.borderColor = data.errors.email ? 'red' : ''
         passwordInput.style.borderColor = data.errors.password ? 'red' : ''
+
+        // auto focus input box
+        if (data.errors.email) {
+          emailInput.focus();
+        } else if (data.errors.password) {
+          passwordInput.focus();
+        }
 
       } catch (err) {
         console.log(err)
