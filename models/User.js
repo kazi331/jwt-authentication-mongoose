@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
 // mongoose hooks before and after
 // Fire a function after doc saved in the db - optional
 userSchema.post('save', (doc, next) => {
-  console.log('new user created', doc)
+  console.log('new user created', doc.email)
   next();
 })
 
